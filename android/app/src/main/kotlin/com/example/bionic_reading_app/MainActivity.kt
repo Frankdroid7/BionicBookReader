@@ -1,4 +1,4 @@
-package com.example.bionic_reading_app
+package com.example.bionic_book_reader
 
 import io.flutter.embedding.android.FlutterActivity
 
