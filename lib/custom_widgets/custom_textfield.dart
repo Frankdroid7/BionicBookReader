@@ -4,16 +4,18 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
   final bool expands;
   final String? hintText;
-  final Function(String val) onChanged;
+  final TextStyle? textStyle;
+  final Function(String val)? onChanged;
   final TextEditingController? controller;
 
   const CustomTextField(
       {Key? key,
+      this.textStyle,
       this.expands = false,
       this.controller,
       this.maxLines,
       this.hintText,
-      required this.onChanged})
+      this.onChanged})
       : super(key: key);
 
   @override
@@ -22,6 +24,7 @@ class CustomTextField extends StatelessWidget {
       expands: expands,
       maxLines: maxLines,
       controller: controller,
+      style: textStyle,
       textAlignVertical: TextAlignVertical.top,
       decoration: InputDecoration(
         hintMaxLines: 2,

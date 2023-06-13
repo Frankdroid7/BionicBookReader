@@ -3,18 +3,20 @@ import 'package:bionic_book_reader/custom_widgets/custom_textfield.dart';
 import 'package:bionic_book_reader/route/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../data/tabbarview_states.dart';
 
 class TabBarViewWidget extends ConsumerWidget {
-  TabBarViewWidget({Key? key}) : super(key: key);
+  //The index of this TabBarViewWidget within the TabBarView.
+  final int? index;
 
-  TextEditingController textToProcessCtrl = TextEditingController();
+  TabBarViewWidget({Key? key, this.index}) : super(key: key);
+
+  final TextEditingController textToProcessCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    TabsProvider noOfTabsProvider = ref.watch(tabsStateProvider.notifier);
-    var enableClearTextBtn = ref.watch(clearTextBtnProvider);
+    TabsProvider tabsProvider = ref.watch(tabsStateProvider.notifier);
+    var enableBtn = ref.watch(buttonStateProvider);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -27,8 +29,7 @@ class TabBarViewWidget extends ConsumerWidget {
                 hintText:
                     'Enter the text you want to convert to a Bionic representation...',
                 onChanged: (val) {
-                  ref.read(clearTextBtnProvider.notifier).state =
-                      val.isNotEmpty;
+                  ref.read(buttonStateProvider.notifier).state = val.isNotEmpty;
                 },
               ),
             ),
@@ -37,16 +38,23 @@ class TabBarViewWidget extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: enableClearTextBtn
+                  onPressed: enableBtn
                       ? () => resetTextFieldAndClearTextBtnState(ref)
                       : null,
                   child: const Text('Clear Text'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    context.router.push(
-                        ViewProcessedTextPage(title: textToProcessCtrl.text));
-                  },
+                  onPressed: enableBtn
+                      ? () {
+                          context.router.push(ViewProcessedTextPage(
+                              title: index != null
+                                  ? ref
+                                      .read(tabsStateProvider)[index!]
+                                      .tabsTitle
+                                  : '',
+                              textToProcess: textToProcessCtrl.text));
+                        }
+                      : null,
                   child: const Text('Process Text'),
                 ),
               ],
@@ -57,7 +65,9 @@ class TabBarViewWidget extends ConsumerWidget {
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => noOfTabsProvider.increment(),
+        onPressed: () {
+          tabsProvider.increment();
+        },
         child: const Icon(Icons.add),
       ),
     );
@@ -65,8 +75,8 @@ class TabBarViewWidget extends ConsumerWidget {
 
   resetTextFieldAndClearTextBtnState(WidgetRef ref) {
     textToProcessCtrl.clear();
-    ref.read(clearTextBtnProvider.notifier).state = false;
+    ref.read(buttonStateProvider.notifier).state = false;
   }
 }
 
-var clearTextBtnProvider = StateProvider<bool>((ref) => false);
+var buttonStateProvider = StateProvider<bool>((ref) => false);

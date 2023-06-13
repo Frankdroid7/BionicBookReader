@@ -1,10 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../custom_widgets/tabbar_view_widget.dart';
 
-final tabsStateProvider =
-    StateNotifierProvider<TabsProvider, List<TabClass>>((ref) {
-  return TabsProvider();
-});
+final tabsStateProvider = StateNotifierProvider<TabsProvider, List<TabClass>>(
+    (ref) => TabsProvider());
 
 class TabsProvider extends StateNotifier<List<TabClass>> {
   TabsProvider()
