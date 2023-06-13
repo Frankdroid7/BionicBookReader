@@ -1,9 +1,11 @@
+import 'package:auto_route/annotations.dart';
 import 'package:bionic_book_reader/pages/main_page/home_page/home_page.dart';
 import 'package:bionic_book_reader/pages/main_page/saved_page/saved_bionictext_page.dart';
 import 'package:bionic_book_reader/utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -12,10 +14,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  String? userText;
-  bool processBtnClicked = false;
-  List<Widget> mainPageWidgets = [HomePage(), SavedBionicTextPage()];
   int _currentIndex = 0;
+  List<Widget> mainPageWidgets = [const HomePage(), SavedBionicTextPage()];
 
   @override
   Widget build(BuildContext context) {

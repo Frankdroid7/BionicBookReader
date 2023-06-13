@@ -9,15 +9,14 @@ final tabsStateProvider =
 class TabsProvider extends StateNotifier<List<TabClass>> {
   TabsProvider()
       : super([
-          TabClass(
-              tabsTitle: 'Tab 1', tabBarViewWidget: const TabBarViewWidget())
+          TabClass(tabsTitle: 'Tab 1', tabBarViewWidget: TabBarViewWidget())
         ]);
 
   void increment() => state = [
         ...state,
         TabClass(
             tabsTitle: 'Tab ${state.length + 1}',
-            tabBarViewWidget: const TabBarViewWidget())
+            tabBarViewWidget: TabBarViewWidget())
       ];
 
   void decrement(int index) => state = [

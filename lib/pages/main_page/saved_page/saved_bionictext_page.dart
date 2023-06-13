@@ -22,7 +22,7 @@ class SavedBionicTextPage extends StatelessWidget {
                   title: 'jfjskfjskj ks kjs fkjsl;fkj;skfj'
                       'k kjksjfksjfk s;fkjs;kfjskjf skj ksjksj kslj f;  kjf skf; sf;klj'
                       'kjs;kfjskjf skj ksjksj kslj f;  kjf skf; sf;klj',
-                  bionicText: 'skjfjskfjskj ks kjs fkjsl;fkj;skfj'
+                  bodyText: 'skjfjskfjskj ks kjs fkjsl;fkj;skfj'
                       'k kjksj'
                       'ME'
                       'kjs;kfjskjf skj ksjksj kslj f;  kjf skf; sf;kljkjs;kfjskjf skj ksjksj kslj f;  kjf skf; sf;klj');

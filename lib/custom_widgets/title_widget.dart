@@ -1,3 +1,4 @@
+import 'package:bionic_book_reader/custom_widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
 class TitleWidget extends StatefulWidget {
@@ -15,9 +16,10 @@ class _TitleWidgetState extends State<TitleWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         textBtnClicked
-            ? const SizedBox(width: 70, child: TextField())
+            ? Expanded(child: CustomTextField(onChanged: (val) {}))
             : Text(widget.title),
         TextButton(
           onPressed: () {

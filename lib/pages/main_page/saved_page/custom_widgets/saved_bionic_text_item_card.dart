@@ -1,10 +1,12 @@
+import 'package:bionic_book_reader/custom_widgets/bionic_text_widget.dart';
+import 'package:bionic_book_reader/pages/main_page/bionic.dart';
 import 'package:flutter/material.dart';
 
 class SavedBionicTextItemCard extends StatelessWidget {
   final String title;
-  final String bionicText;
+  final String bodyText;
   const SavedBionicTextItemCard(
-      {Key? key, required this.title, required this.bionicText})
+      {Key? key, required this.title, required this.bodyText})
       : super(key: key);
 
   @override
@@ -15,7 +17,6 @@ class SavedBionicTextItemCard extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(8),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -23,16 +24,12 @@ class SavedBionicTextItemCard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.fade,
               style: TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 fontSize: 18,
               ),
             ),
             SizedBox(height: 12),
-            Text(
-              bionicText,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+            BionicTextWidget(text: bodyText),
           ],
         ),
       ),
