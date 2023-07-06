@@ -5,7 +5,7 @@ import 'package:bionic_book_reader/route/app_router.gr.dart';
 class AppRouter extends $AppRouter {
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: ViewProcessedTextPage.page),
+        AutoRoute(page: ViewBionicTextPage.page),
         AutoRoute(page: MainPage.page, initial: true),
       ];
 }

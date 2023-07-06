@@ -9,9 +9,10 @@ class TabBarViewWidget extends ConsumerWidget {
   //The index of this TabBarViewWidget within the TabBarView.
   final int? index;
 
-  TabBarViewWidget({Key? key, this.index}) : super(key: key);
+  TabBarViewWidget({Key? key, this.index, this.textToProcessCtrl})
+      : super(key: key);
 
-  final TextEditingController textToProcessCtrl = TextEditingController();
+  TextEditingController? textToProcessCtrl;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,15 +46,11 @@ class TabBarViewWidget extends ConsumerWidget {
                 ),
                 ElevatedButton(
                   onPressed: enableBtn
-                      ? () {
-                          context.router.push(ViewProcessedTextPage(
-                              title: index != null
-                                  ? ref
-                                      .read(tabsStateProvider)[index!]
-                                      .tabsTitle
-                                  : '',
-                              textToProcess: textToProcessCtrl.text));
-                        }
+                      ? () => context.router.push(ViewBionicTextPage(
+                          title: index != null
+                              ? ref.read(tabsStateProvider)[index!].tabsTitle
+                              : '',
+                          textToProcess: textToProcessCtrl!.text))
                       : null,
                   child: const Text('Process Text'),
                 ),
@@ -66,7 +63,7 @@ class TabBarViewWidget extends ConsumerWidget {
           FloatingActionButtonLocation.miniCenterFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          tabsProvider.increment();
+          tabsProvider.increment(TextEditingController());
         },
         child: const Icon(Icons.add),
       ),
@@ -74,7 +71,7 @@ class TabBarViewWidget extends ConsumerWidget {
   }
 
   resetTextFieldAndClearTextBtnState(WidgetRef ref) {
-    textToProcessCtrl.clear();
+    textToProcessCtrl?.clear();
     ref.read(buttonStateProvider.notifier).state = false;
   }
 }

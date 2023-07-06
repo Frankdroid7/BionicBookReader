@@ -94,8 +94,8 @@ class HomePageState extends ConsumerState<HomePage>
               height: 60,
               child: AppBar(
                 bottom: TabBar(
-                  controller: tabController,
                   isScrollable: true,
+                  controller: tabController,
                   tabs: List.generate(
                     tabClassList.length,
                     (index) {

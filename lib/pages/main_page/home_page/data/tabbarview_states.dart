@@ -8,14 +8,17 @@ final tabsStateProvider = StateNotifierProvider<TabsProvider, List<TabClass>>(
 class TabsProvider extends StateNotifier<List<TabClass>> {
   TabsProvider()
       : super([
-          TabClass(tabsTitle: 'Tab 1', tabBarViewWidget: TabBarViewWidget())
+          TabClass(
+              tabsTitle: 'Tab 1',
+              tabBarViewWidget:
+                  TabBarViewWidget(textToProcessCtrl: TextEditingController()))
         ]);
 
-  void increment() => state = [
+  void increment(TextEditingController controller) => state = [
         ...state,
         TabClass(
             tabsTitle: 'Tab ${state.length + 1}',
-            tabBarViewWidget: TabBarViewWidget())
+            tabBarViewWidget: TabBarViewWidget(textToProcessCtrl: controller))
       ];
 
   void decrement(int index) => state = [
