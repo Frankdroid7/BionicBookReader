@@ -100,20 +100,28 @@ class HomePageState extends ConsumerState<HomePage>
                     tabClassList.length,
                     (index) {
                       TabClass tabClass = tabClassList[index];
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TitleWidget(title: tabClass.tabsTitle),
-                          index != 0
-                              ? InkWell(
-                                  onTap: () {
-                                    tabsProvider.decrement(index);
-                                  },
-                                  child: const Icon(Icons.close,
-                                      color: Colors.red),
-                                )
-                              : const SizedBox.shrink(),
-                        ],
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              tabClass.tabsTitle,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w700),
+                            ),
+                            SizedBox(width: 10),
+                            index != 0
+                                ? InkWell(
+                                    onTap: () {
+                                      tabsProvider.decrement(index);
+                                    },
+                                    child: const Icon(Icons.close,
+                                        color: Colors.red),
+                                  )
+                                : const SizedBox.shrink(),
+                          ],
+                        ),
                       );
                     },
                   ),

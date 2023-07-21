@@ -9,10 +9,9 @@ class TabBarViewWidget extends ConsumerWidget {
   //The index of this TabBarViewWidget within the TabBarView.
   final int? index;
 
-  TabBarViewWidget({Key? key, this.index, this.textToProcessCtrl})
-      : super(key: key);
+  TabBarViewWidget({Key? key, this.index}) : super(key: key);
 
-  TextEditingController? textToProcessCtrl;
+  TextEditingController? textToProcessCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,7 +62,7 @@ class TabBarViewWidget extends ConsumerWidget {
           FloatingActionButtonLocation.miniCenterFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          tabsProvider.increment(TextEditingController());
+          tabsProvider.increment();
         },
         child: const Icon(Icons.add),
       ),

@@ -8,23 +8,31 @@ final tabsStateProvider = StateNotifierProvider<TabsProvider, List<TabClass>>(
 class TabsProvider extends StateNotifier<List<TabClass>> {
   TabsProvider()
       : super([
-          TabClass(
-              tabsTitle: 'Tab 1',
-              tabBarViewWidget:
-                  TabBarViewWidget(textToProcessCtrl: TextEditingController()))
+          TabClass(tabsTitle: 'Tab 1', tabBarViewWidget: TabBarViewWidget())
         ]);
 
-  void increment(TextEditingController controller) => state = [
+  void increment() => state = [
         ...state,
         TabClass(
             tabsTitle: 'Tab ${state.length + 1}',
-            tabBarViewWidget: TabBarViewWidget(textToProcessCtrl: controller))
+            tabBarViewWidget: TabBarViewWidget())
       ];
 
-  void decrement(int index) => state = [
-        for (final tab in state)
-          if (tab.tabsTitle != state[index].tabsTitle) tab
-      ];
+  void decrement(int index) {
+    /* This counter is created to hold the length of the Tabs after
+       a tab has been deleted. */
+    int counter = 0;
+    for (int i = 0; i < state.length; i++) {
+      if (state[i].tabsTitle != state[index].tabsTitle) {
+        counter++;
+      }
+    }
+    state = [
+      for (int i = 0; i < counter; i++)
+        TabClass(
+            tabsTitle: 'Tab ${i + 1}', tabBarViewWidget: TabBarViewWidget())
+    ];
+  }
 }
 
 class TabClass {
