@@ -20,6 +20,7 @@ class _ViewBionicTextPageState extends State<ViewBionicTextPage> {
   bool isEditing = false;
   late TextEditingController titleCtrl;
   late TextEditingController textToProcessCtrl;
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -41,23 +42,39 @@ class _ViewBionicTextPageState extends State<ViewBionicTextPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (isEditing) ...[
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomTextField(
+                Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomTextField(
                         controller: titleCtrl,
-                        textStyle:
-                            const TextStyle(fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 10),
-                  ],
+                        textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        validator: (val) {
+                          //regex to check if the string contains only alphabets
+                          RegExp regex = RegExp(r"Tab\s*\d+");
+                          if (regex.hasMatch(val!)) {
+                            return 'You cannot change your title to Tab followed by a number';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
                 ),
                 Expanded(
-                    child: CustomTextField(
-                        expands: true, controller: textToProcessCtrl)),
+                  child: CustomTextField(
+                    expands: true,
+                    controller: textToProcessCtrl,
+                  ),
+                ),
                 const SizedBox(height: 10),
                 ElevatedButton(
                     onPressed: () {
-                      setState(() => isEditing = false);
+                      if (formKey.currentState!.validate()) {
+                        setState(() => isEditing = false);
+                      }
                     },
                     child: const Text('Save Editing'))
               ] else ...[

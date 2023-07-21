@@ -26,12 +26,6 @@ class HomePageState extends ConsumerState<HomePage>
     tabController =
         TabController(length: ref.watch(tabsStateProvider).length, vsync: this);
 
-    //
-    // ref.listen(tabsStateProvider, (previousState, latestState) {
-    //   debugPrint('TAB STATE -> $latestState');
-    //   tabController.animateTo(1);
-    // });
-
     return Column(
       children: [
         Padding(
@@ -82,6 +76,7 @@ class HomePageState extends ConsumerState<HomePage>
     );
   }
 
+  //This holds the Tabs and the TabBarView widgets.
   Expanded tabWidget(WidgetRef ref) {
     List<TabClass> tabClassList = ref.watch(tabsStateProvider);
     TabsProvider tabsProvider = ref.watch(tabsStateProvider.notifier);
@@ -110,7 +105,7 @@ class HomePageState extends ConsumerState<HomePage>
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w700),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             index != 0
                                 ? InkWell(
                                     onTap: () {
@@ -130,7 +125,6 @@ class HomePageState extends ConsumerState<HomePage>
             ),
             Expanded(
               child: TabBarView(
-                controller: tabController,
                 children: List.generate(
                   tabClassList.length,
                   (index) => TabBarViewWidget(index: index),
