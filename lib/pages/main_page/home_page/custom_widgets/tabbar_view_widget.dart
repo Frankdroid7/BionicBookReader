@@ -5,16 +5,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/tabbarview_states.dart';
 
-class TabBarViewWidget extends ConsumerWidget {
+class TabBarViewWidget extends ConsumerStatefulWidget {
   //The index of this TabBarViewWidget within the TabBarView.
   final int? index;
+  final String? textToProcess;
 
-  TabBarViewWidget({Key? key, this.index}) : super(key: key);
-
-  final TextEditingController? textToProcessCtrl = TextEditingController();
+  const TabBarViewWidget({Key? key, this.index, this.textToProcess})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  TabBarViewWidgetState createState() => TabBarViewWidgetState();
+}
+
+class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
+  TextEditingController? textToProcessCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+    textToProcessCtrl = TextEditingController(text: widget.textToProcess ?? '');
+  }
+
+  @override
+  Widget build(BuildContext context) {
     TabsProvider tabsProvider = ref.watch(tabsStateProvider.notifier);
     var enableBtn = ref.watch(buttonStateProvider);
     return Scaffold(
@@ -30,10 +43,12 @@ class TabBarViewWidget extends ConsumerWidget {
                     'Enter the text you want to convert to a Bionic representation...',
                 onChanged: (val) {
                   ref.read(buttonStateProvider.notifier).state = val.isNotEmpty;
+                  print('index: ${widget.index} val: $val');
+                  tabsProvider.changeTextToProcess(widget.index!, val);
                 },
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -46,8 +61,10 @@ class TabBarViewWidget extends ConsumerWidget {
                 ElevatedButton(
                   onPressed: enableBtn
                       ? () => context.router.push(ViewBionicTextPage(
-                          title: index != null
-                              ? ref.read(tabsStateProvider)[index!].tabsTitle
+                          title: widget.index != null
+                              ? ref
+                                  .read(tabsStateProvider)[widget.index!]
+                                  .tabsTitle
                               : '',
                           textToProcess: textToProcessCtrl!.text))
                       : null,

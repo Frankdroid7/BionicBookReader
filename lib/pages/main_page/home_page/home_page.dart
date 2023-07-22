@@ -18,13 +18,9 @@ class HomePage extends ConsumerStatefulWidget {
 
 class HomePageState extends ConsumerState<HomePage>
     with TickerProviderStateMixin {
-  late TabController tabController;
-
   @override
   Widget build(BuildContext context) {
     HomePageDropDownItems dropdownState = ref.watch(dropdownStateProvider);
-    tabController =
-        TabController(length: ref.watch(tabsStateProvider).length, vsync: this);
 
     return Column(
       children: [
@@ -90,7 +86,6 @@ class HomePageState extends ConsumerState<HomePage>
               child: AppBar(
                 bottom: TabBar(
                   isScrollable: true,
-                  controller: tabController,
                   tabs: List.generate(
                     tabClassList.length,
                     (index) {
@@ -127,7 +122,13 @@ class HomePageState extends ConsumerState<HomePage>
               child: TabBarView(
                 children: List.generate(
                   tabClassList.length,
-                  (index) => TabBarViewWidget(index: index),
+                  (index) {
+                    print('TAB INDEX: ${tabClassList[index].textToProcess}');
+                    return TabBarViewWidget(
+                      index: index,
+                      textToProcess: tabClassList[index].textToProcess,
+                    );
+                  },
                 ),
               ),
             ),

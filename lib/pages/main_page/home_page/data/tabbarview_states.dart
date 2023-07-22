@@ -8,14 +8,25 @@ final tabsStateProvider = StateNotifierProvider<TabsProvider, List<TabClass>>(
 class TabsProvider extends StateNotifier<List<TabClass>> {
   TabsProvider()
       : super([
-          TabClass(tabsTitle: 'Tab 1', tabBarViewWidget: TabBarViewWidget()),
+          TabClass(
+            tabsTitle: 'Tab 1',
+            textToProcess: '',
+          ),
         ]);
+
+  changeTextToProcess(int index, String text) {
+    state[index] = TabClass(
+      tabsTitle: state[index].tabsTitle,
+      textToProcess: text,
+    );
+  }
 
   void increment() => state = [
         ...state,
         TabClass(
-            tabsTitle: 'Tab ${state.length + 1}',
-            tabBarViewWidget: TabBarViewWidget())
+          tabsTitle: 'Tab ${state.length + 1}',
+          textToProcess: '',
+        )
       ];
 
   void decrement(int index) {
@@ -30,14 +41,16 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
     state = [
       for (int i = 0; i < counter; i++)
         TabClass(
-            tabsTitle: 'Tab ${i + 1}', tabBarViewWidget: TabBarViewWidget())
+          tabsTitle: 'Tab ${i + 1}',
+          textToProcess: '',
+        )
     ];
   }
 }
 
 class TabClass {
   final String tabsTitle;
-  final TabBarViewWidget tabBarViewWidget;
+  final String textToProcess;
 
-  TabClass({required this.tabsTitle, required this.tabBarViewWidget});
+  TabClass({required this.tabsTitle, required this.textToProcess});
 }
