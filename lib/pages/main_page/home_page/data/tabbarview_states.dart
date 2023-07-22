@@ -8,7 +8,7 @@ final tabsStateProvider = StateNotifierProvider<TabsProvider, List<TabClass>>(
 class TabsProvider extends StateNotifier<List<TabClass>> {
   TabsProvider()
       : super([
-          TabClass(tabsTitle: 'Tab 1', tabBarViewWidget: TabBarViewWidget())
+          TabClass(tabsTitle: 'Tab 1', tabBarViewWidget: TabBarViewWidget()),
         ]);
 
   void increment() => state = [

@@ -7,6 +7,7 @@ class CustomTextField extends StatelessWidget {
   final TextStyle? textStyle;
   final Function(String val)? onChanged;
   final TextEditingController? controller;
+  final String? Function(String? val)? validator;
 
   const CustomTextField(
       {Key? key,
@@ -15,12 +16,13 @@ class CustomTextField extends StatelessWidget {
       this.controller,
       this.maxLines,
       this.hintText,
+      this.validator,
       this.onChanged})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       expands: expands,
       maxLines: maxLines,
       controller: controller,
@@ -33,6 +35,7 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
       ),
+      validator: validator,
       onChanged: onChanged,
     );
   }

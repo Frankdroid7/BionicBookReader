@@ -11,7 +11,7 @@ class TabBarViewWidget extends ConsumerWidget {
 
   TabBarViewWidget({Key? key, this.index}) : super(key: key);
 
-  TextEditingController? textToProcessCtrl = TextEditingController();
+  final TextEditingController? textToProcessCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
