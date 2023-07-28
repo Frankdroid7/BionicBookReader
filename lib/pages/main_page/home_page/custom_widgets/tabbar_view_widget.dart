@@ -8,10 +8,8 @@ import '../data/tabbarview_states.dart';
 class TabBarViewWidget extends ConsumerStatefulWidget {
   //The index of this TabBarViewWidget within the TabBarView.
   final int? index;
-  final String? textToProcess;
 
-  const TabBarViewWidget({Key? key, this.index, this.textToProcess})
-      : super(key: key);
+  const TabBarViewWidget({Key? key, this.index}) : super(key: key);
 
   @override
   TabBarViewWidgetState createState() => TabBarViewWidgetState();
@@ -23,13 +21,17 @@ class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
   @override
   void initState() {
     super.initState();
-    textToProcessCtrl = TextEditingController(text: widget.textToProcess ?? '');
+
+    textToProcessCtrl = TextEditingController(
+        text: ref.read(tabsStateProvider)[widget.index!].textToProcess ?? '');
   }
 
   @override
   Widget build(BuildContext context) {
+    var enableBtn = ref.watch(buttonStateProvider(widget.index!));
     TabsProvider tabsProvider = ref.watch(tabsStateProvider.notifier);
-    var enableBtn = ref.watch(buttonStateProvider);
+    var btnStateProvider =
+        ref.read(buttonStateProvider(widget.index!).notifier);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -42,8 +44,7 @@ class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
                 hintText:
                     'Enter the text you want to convert to a Bionic representation...',
                 onChanged: (val) {
-                  ref.read(buttonStateProvider.notifier).state = val.isNotEmpty;
-                  print('index: ${widget.index} val: $val');
+                  btnStateProvider.state = val.isNotEmpty;
                   tabsProvider.changeTextToProcess(widget.index!, val);
                 },
               ),
@@ -54,7 +55,8 @@ class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
               children: [
                 ElevatedButton(
                   onPressed: enableBtn
-                      ? () => resetTextFieldAndClearTextBtnState(ref)
+                      ? () =>
+                          resetTextFieldAndClearTextBtnState(ref, widget.index!)
                       : null,
                   child: const Text('Clear Text'),
                 ),
@@ -86,10 +88,9 @@ class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
     );
   }
 
-  resetTextFieldAndClearTextBtnState(WidgetRef ref) {
+  resetTextFieldAndClearTextBtnState(WidgetRef ref, int index) {
     textToProcessCtrl?.clear();
-    ref.read(buttonStateProvider.notifier).state = false;
+    ref.read(buttonStateProvider(index).notifier).state = false;
+    ref.read(tabsStateProvider.notifier).changeTextToProcess(index, '');
   }
 }
-
-var buttonStateProvider = StateProvider<bool>((ref) => false);
