@@ -9,22 +9,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../custom_widgets/title_widget.dart';
 import '../../../utils/constants.dart';
 
-class HomePage extends ConsumerStatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
 
   @override
-  HomePageState createState() => HomePageState();
-}
-
-class HomePageState extends ConsumerState<HomePage>
-    with TickerProviderStateMixin {
-  late TabController tabController;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     HomePageDropDownItems dropdownState = ref.watch(dropdownStateProvider);
-    tabController =
-        TabController(length: ref.watch(tabsStateProvider).length, vsync: this);
 
     return Column(
       children: [
@@ -90,7 +80,6 @@ class HomePageState extends ConsumerState<HomePage>
               child: AppBar(
                 bottom: TabBar(
                   isScrollable: true,
-                  controller: tabController,
                   tabs: List.generate(
                     tabClassList.length,
                     (index) {
@@ -127,7 +116,9 @@ class HomePageState extends ConsumerState<HomePage>
               child: TabBarView(
                 children: List.generate(
                   tabClassList.length,
-                  (index) => TabBarViewWidget(index: index),
+                  (index) {
+                    return TabBarViewWidget(index: index);
+                  },
                 ),
               ),
             ),
