@@ -7,15 +7,7 @@ final tabsStateProvider = StateNotifierProvider<TabsProvider, List<TabClass>>(
 
 var buttonStateProvider = StateProvider.family<bool, int>(
   (ref, index) {
-    int newIndex = index;
-    var ab = ref.read(tabsStateProvider).length;
-
-    /*This is to make sure when the last item in the Tab list is deleted,
-    * we do not get a RangeError error.*/
-    if (index == ab--) {
-      newIndex -= 1;
-    }
-    return ref.watch(tabsStateProvider)[newIndex].enableBtn;
+    return ref.read(tabsStateProvider)[index].enableBtn;
   },
 );
 
@@ -78,6 +70,12 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
     }
 
     state = tabClassList;
+  }
+
+  void clearAllTabs() {
+    state = [
+      TabClass(tabsTitle: 'Tab 1', textToProcess: state[0].textToProcess),
+    ];
   }
 }
 

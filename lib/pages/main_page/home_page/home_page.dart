@@ -17,6 +17,7 @@ class HomePage extends ConsumerWidget {
     HomePageDropDownItems dropdownState = ref.watch(dropdownStateProvider);
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -58,6 +59,28 @@ class HomePage extends ConsumerWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+        Visibility(
+          visible: ref.read(tabsStateProvider).length > 1,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: InkWell(
+                onTap: () {
+                  ref.read(tabsStateProvider.notifier).clearAllTabs();
+                },
+                child: Container(
+                  color: Colors.red.withOpacity(0.2),
+                  padding: const EdgeInsets.all(4),
+                  child: const Text(
+                    'Clear all tabs',
+                    style: TextStyle(color: Colors.red, fontSize: 18),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
