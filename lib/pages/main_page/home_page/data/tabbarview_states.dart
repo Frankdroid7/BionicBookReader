@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import '../custom_widgets/tabbar_view_widget.dart';
+part 'tabbarview_states.g.dart';
 
 final tabsStateProvider = StateNotifierProvider<TabsProvider, List<TabClass>>(
     (ref) => TabsProvider());
@@ -79,10 +82,12 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
   }
 }
 
+@collection
 class TabClass {
   final bool enableBtn;
   final String tabsTitle;
   final String textToProcess;
+  Id id = Isar.autoIncrement;
 
   TabClass({required this.tabsTitle, required this.textToProcess})
       : enableBtn = textToProcess.isNotEmpty;
