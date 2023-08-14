@@ -84,11 +84,14 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
 
 @collection
 class TabClass {
+  Id id;
   final bool enableBtn;
   final String tabsTitle;
-  final String textToProcess;
-  Id id = Isar.autoIncrement;
+  String textToProcess;
 
-  TabClass({required this.tabsTitle, required this.textToProcess})
+  TabClass(
+      {this.id = Isar.autoIncrement,
+      required this.tabsTitle,
+      required this.textToProcess})
       : enableBtn = textToProcess.isNotEmpty;
 }
