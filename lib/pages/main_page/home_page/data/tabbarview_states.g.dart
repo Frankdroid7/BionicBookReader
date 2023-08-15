@@ -22,9 +22,9 @@ const TabClassSchema = CollectionSchema(
       name: r'enableBtn',
       type: IsarType.bool,
     ),
-    r'tabsTitle': PropertySchema(
+    r'tabTitle': PropertySchema(
       id: 1,
-      name: r'tabsTitle',
+      name: r'tabTitle',
       type: IsarType.string,
     ),
     r'textToProcess': PropertySchema(
@@ -53,7 +53,7 @@ int _tabClassEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.tabsTitle.length * 3;
+  bytesCount += 3 + object.tabTitle.length * 3;
   bytesCount += 3 + object.textToProcess.length * 3;
   return bytesCount;
 }
@@ -65,7 +65,7 @@ void _tabClassSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeBool(offsets[0], object.enableBtn);
-  writer.writeString(offsets[1], object.tabsTitle);
+  writer.writeString(offsets[1], object.tabTitle);
   writer.writeString(offsets[2], object.textToProcess);
 }
 
@@ -76,10 +76,10 @@ TabClass _tabClassDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = TabClass(
-    tabsTitle: reader.readString(offsets[1]),
+    id: id,
+    tabTitle: reader.readString(offsets[1]),
     textToProcess: reader.readString(offsets[2]),
   );
-  object.id = id;
   return object;
 }
 
@@ -252,20 +252,20 @@ extension TabClassQueryFilter
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabsTitleEqualTo(
+  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabTitleEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'tabsTitle',
+        property: r'tabTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabsTitleGreaterThan(
+  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabTitleGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -273,14 +273,14 @@ extension TabClassQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'tabsTitle',
+        property: r'tabTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabsTitleLessThan(
+  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabTitleLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -288,14 +288,14 @@ extension TabClassQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'tabsTitle',
+        property: r'tabTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabsTitleBetween(
+  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabTitleBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -304,7 +304,7 @@ extension TabClassQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'tabsTitle',
+        property: r'tabTitle',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -314,70 +314,69 @@ extension TabClassQueryFilter
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabsTitleStartsWith(
+  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabTitleStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'tabsTitle',
+        property: r'tabTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabsTitleEndsWith(
+  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabTitleEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'tabsTitle',
+        property: r'tabTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabsTitleContains(
+  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabTitleContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'tabsTitle',
+        property: r'tabTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabsTitleMatches(
+  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabTitleMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'tabsTitle',
+        property: r'tabTitle',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabsTitleIsEmpty() {
+  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabTitleIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'tabsTitle',
+        property: r'tabTitle',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterFilterCondition>
-      tabsTitleIsNotEmpty() {
+  QueryBuilder<TabClass, TabClass, QAfterFilterCondition> tabTitleIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'tabsTitle',
+        property: r'tabTitle',
         value: '',
       ));
     });
@@ -537,15 +536,15 @@ extension TabClassQuerySortBy on QueryBuilder<TabClass, TabClass, QSortBy> {
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterSortBy> sortByTabsTitle() {
+  QueryBuilder<TabClass, TabClass, QAfterSortBy> sortByTabTitle() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tabsTitle', Sort.asc);
+      return query.addSortBy(r'tabTitle', Sort.asc);
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterSortBy> sortByTabsTitleDesc() {
+  QueryBuilder<TabClass, TabClass, QAfterSortBy> sortByTabTitleDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tabsTitle', Sort.desc);
+      return query.addSortBy(r'tabTitle', Sort.desc);
     });
   }
 
@@ -588,15 +587,15 @@ extension TabClassQuerySortThenBy
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterSortBy> thenByTabsTitle() {
+  QueryBuilder<TabClass, TabClass, QAfterSortBy> thenByTabTitle() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tabsTitle', Sort.asc);
+      return query.addSortBy(r'tabTitle', Sort.asc);
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QAfterSortBy> thenByTabsTitleDesc() {
+  QueryBuilder<TabClass, TabClass, QAfterSortBy> thenByTabTitleDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tabsTitle', Sort.desc);
+      return query.addSortBy(r'tabTitle', Sort.desc);
     });
   }
 
@@ -621,10 +620,10 @@ extension TabClassQueryWhereDistinct
     });
   }
 
-  QueryBuilder<TabClass, TabClass, QDistinct> distinctByTabsTitle(
+  QueryBuilder<TabClass, TabClass, QDistinct> distinctByTabTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'tabsTitle', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'tabTitle', caseSensitive: caseSensitive);
     });
   }
 
@@ -651,9 +650,9 @@ extension TabClassQueryProperty
     });
   }
 
-  QueryBuilder<TabClass, String, QQueryOperations> tabsTitleProperty() {
+  QueryBuilder<TabClass, String, QQueryOperations> tabTitleProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'tabsTitle');
+      return query.addPropertyName(r'tabTitle');
     });
   }
 

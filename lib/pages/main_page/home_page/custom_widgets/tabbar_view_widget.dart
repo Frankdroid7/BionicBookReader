@@ -1,15 +1,16 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bionic_book_reader/core/local_db_service.dart';
 import 'package:bionic_book_reader/custom_widgets/custom_textfield.dart';
 import 'package:bionic_book_reader/route/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../main.dart';
 import '../data/tabbarview_states.dart';
 
 class TabBarViewWidget extends ConsumerStatefulWidget {
-  //The index of this TabBarViewWidget within the TabBarView.
-  final int? index;
+  final TabClass tabClass;
 
-  const TabBarViewWidget({Key? key, this.index}) : super(key: key);
+  const TabBarViewWidget({Key? key, required this.tabClass}) : super(key: key);
 
   @override
   TabBarViewWidgetState createState() => TabBarViewWidgetState();
@@ -21,17 +22,13 @@ class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
   @override
   void initState() {
     super.initState();
-
     textToProcessCtrl = TextEditingController(
-        text: ref.read(tabsStateProvider)[widget.index!].textToProcess ?? '');
+      text: widget.tabClass.textToProcess ?? '',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    var enableBtn = ref.watch(buttonStateProvider(widget.index!));
-    TabsProvider tabsProvider = ref.watch(tabsStateProvider.notifier);
-    var btnStateProvider =
-        ref.read(buttonStateProvider(widget.index!).notifier);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -44,8 +41,8 @@ class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
                 hintText:
                     'Enter the text you want to convert to a Bionic representation...',
                 onChanged: (val) {
-                  btnStateProvider.state = val.isNotEmpty;
-                  tabsProvider.changeTextToProcess(widget.index!, val);
+                  LocalDatabaseService.updateTabClass(widget.tabClass.id,
+                      textToProcess: val);
                 },
               ),
             ),
@@ -54,21 +51,27 @@ class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: enableBtn
-                      ? () =>
-                          resetTextFieldAndClearTextBtnState(ref, widget.index!)
+                  onPressed: widget.tabClass.enableBtn
+                      ? () {
+                          textToProcessCtrl?.clear();
+                          LocalDatabaseService.updateTabClass(
+                              widget.tabClass.id,
+                              textToProcess: '');
+                        }
                       : null,
                   child: const Text('Clear Text'),
                 ),
                 ElevatedButton(
-                  onPressed: enableBtn
-                      ? () => context.router.push(ViewBionicTextPage(
-                          title: widget.index != null
-                              ? ref
-                                  .read(tabsStateProvider)[widget.index!]
-                                  .tabsTitle
-                              : '',
-                          textToProcess: textToProcessCtrl!.text))
+                  onPressed: widget.tabClass.enableBtn
+                      ? () {
+                          context.router.push(ViewBionicTextPage(
+                            tabClass: widget.tabClass,
+                            /*To update the text in the TabBarView when
+                            * the text has been edit from ViewBionicTextPage*/
+                            textToProcessFunc: (value) =>
+                                textToProcessCtrl?.text = value,
+                          ));
+                        }
                       : null,
                   child: const Text('Process Text'),
                 ),
@@ -80,17 +83,18 @@ class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          tabsProvider.increment();
+        onPressed: () async {
+          List<TabClass> tabClassSchemaCount =
+              await LocalDatabaseService.getAllTabClassFromLocalDB();
+
+          TabClass tabClass = TabClass(
+              tabTitle: 'Tab ${tabClassSchemaCount.length + 1}',
+              textToProcess: '');
+
+          LocalDatabaseService.addTabClassToLocalDB(tabClass);
         },
         child: const Icon(Icons.add),
       ),
     );
-  }
-
-  resetTextFieldAndClearTextBtnState(WidgetRef ref, int index) {
-    textToProcessCtrl?.clear();
-    ref.read(buttonStateProvider(index).notifier).state = false;
-    ref.read(tabsStateProvider.notifier).changeTextToProcess(index, '');
   }
 }

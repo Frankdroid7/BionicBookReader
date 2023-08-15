@@ -1,15 +1,18 @@
 import 'package:auto_route/annotations.dart';
+import 'package:bionic_book_reader/core/local_db_service.dart';
 import 'package:bionic_book_reader/custom_widgets/bionic_text_widget.dart';
 import 'package:bionic_book_reader/custom_widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
+import 'main_page/home_page/data/tabbarview_states.dart';
+
 @RoutePage()
 class ViewBionicTextPage extends StatefulWidget {
-  final String title;
-  final String textToProcess;
+  final TabClass tabClass;
+  final Function(String text) textToProcessFunc;
 
   const ViewBionicTextPage(
-      {Key? key, required this.textToProcess, required this.title})
+      {Key? key, required this.textToProcessFunc, required this.tabClass})
       : super(key: key);
 
   @override
@@ -25,8 +28,9 @@ class _ViewBionicTextPageState extends State<ViewBionicTextPage> {
   @override
   void initState() {
     super.initState();
-    titleCtrl = TextEditingController(text: widget.title);
-    textToProcessCtrl = TextEditingController(text: widget.textToProcess);
+    titleCtrl = TextEditingController(text: widget.tabClass.tabTitle);
+    textToProcessCtrl =
+        TextEditingController(text: widget.tabClass.textToProcess);
   }
 
   @override
@@ -71,12 +75,21 @@ class _ViewBionicTextPageState extends State<ViewBionicTextPage> {
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      if (widget.tabClass.textToProcess !=
+                          textToProcessCtrl.text) {
+                        await LocalDatabaseService.updateTabClass(
+                            widget.tabClass.id,
+                            textToProcess: textToProcessCtrl.text);
+
                         setState(() => isEditing = false);
+                        widget.textToProcessFunc(textToProcessCtrl.text);
                       }
-                    },
-                    child: const Text('Save Editing'))
+                    }
+                  },
+                  child: const Text('Save Editing'),
+                )
               ] else ...[
                 Expanded(
                   child: SingleChildScrollView(

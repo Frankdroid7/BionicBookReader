@@ -18,14 +18,14 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
   TabsProvider()
       : super([
           TabClass(
-            tabsTitle: 'Tab 1',
+            tabTitle: 'Tab 1',
             textToProcess: '',
           ),
         ]);
 
   changeTextToProcess(int index, String text) {
     state[index] = TabClass(
-      tabsTitle: state[index].tabsTitle,
+      tabTitle: state[index].tabTitle,
       textToProcess: text,
     );
   }
@@ -33,7 +33,7 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
   void increment() => state = [
         ...state,
         TabClass(
-          tabsTitle: 'Tab ${state.length + 1}',
+          tabTitle: 'Tab ${state.length + 1}',
           textToProcess: '',
         )
       ];
@@ -47,7 +47,7 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
     for (int i = 0; i < state.length; i++) {
       /*If the index of the tab to be deleted is reached, skip it,
         don't increment the counter.*/
-      if (state[i].tabsTitle != state[index].tabsTitle) {
+      if (state[i].tabTitle != state[index].tabTitle) {
         counter++;
       }
     }
@@ -67,7 +67,7 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
         /*If i is after the index which has been deleted,
         we won't add 1 to i because at this point,
         i would have already been incremented by 1. */
-        tabsTitle: 'Tab ${i > index ? i : i + 1}',
+        tabTitle: 'Tab ${i > index ? i : i + 1}',
         textToProcess: state[i].textToProcess,
       ));
     }
@@ -77,7 +77,7 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
 
   void clearAllTabs() {
     state = [
-      TabClass(tabsTitle: 'Tab 1', textToProcess: state[0].textToProcess),
+      TabClass(tabTitle: 'Tab 1', textToProcess: state[0].textToProcess),
     ];
   }
 }
@@ -86,12 +86,12 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
 class TabClass {
   Id id;
   final bool enableBtn;
-  final String tabsTitle;
+  String tabTitle;
   String textToProcess;
 
   TabClass(
       {this.id = Isar.autoIncrement,
-      required this.tabsTitle,
+      required this.tabTitle,
       required this.textToProcess})
       : enableBtn = textToProcess.isNotEmpty;
 }

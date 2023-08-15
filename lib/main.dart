@@ -1,11 +1,17 @@
+import 'package:bionic_book_reader/core/local_db_service.dart';
+import 'package:bionic_book_reader/pages/main_page/home_page/data/tabbarview_states.dart';
 import 'package:bionic_book_reader/pages/main_page/main_page.dart';
 import 'package:bionic_book_reader/route/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
-void main() {
+void main() async {
   runApp(MyApp());
+
+  await LocalDatabaseService.initializeLocalDB();
 
   /*To prevent "Got a stack frame from package:stack_trace,
     where a vm or web frame was expected" error, because riverpod produces

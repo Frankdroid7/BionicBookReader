@@ -9,8 +9,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i3;
-import 'package:bionic_book_reader/pages/main_page/main_page.dart' as _i1;
-import 'package:bionic_book_reader/pages/view_bionic_text_page.dart' as _i2;
+import 'package:bionic_book_reader/pages/main_page/home_page/data/tabbarview_states.dart'
+    as _i5;
+import 'package:bionic_book_reader/pages/main_page/main_page.dart' as _i2;
+import 'package:bionic_book_reader/pages/view_bionic_text_page.dart' as _i1;
 import 'package:flutter/material.dart' as _i4;
 
 abstract class $AppRouter extends _i3.RootStackRouter {
@@ -18,54 +20,40 @@ abstract class $AppRouter extends _i3.RootStackRouter {
 
   @override
   final Map<String, _i3.PageFactory> pagesMap = {
-    MainPage.name: (routeData) {
-      return _i3.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i1.MainPage(),
-      );
-    },
     ViewBionicTextPage.name: (routeData) {
       final args = routeData.argsAs<ViewBionicTextPageArgs>();
       return _i3.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i2.ViewBionicTextPage(
+        child: _i1.ViewBionicTextPage(
           key: args.key,
-          textToProcess: args.textToProcess,
-          title: args.title,
+          textToProcessFunc: args.textToProcessFunc,
+          tabClass: args.tabClass,
         ),
+      );
+    },
+    MainPage.name: (routeData) {
+      return _i3.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const _i2.MainPage(),
       );
     },
   };
 }
 
 /// generated route for
-/// [_i1.MainPage]
-class MainPage extends _i3.PageRouteInfo<void> {
-  const MainPage({List<_i3.PageRouteInfo>? children})
-      : super(
-          MainPage.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'MainPage';
-
-  static const _i3.PageInfo<void> page = _i3.PageInfo<void>(name);
-}
-
-/// generated route for
-/// [_i2.ViewBionicTextPage]
+/// [_i1.ViewBionicTextPage]
 class ViewBionicTextPage extends _i3.PageRouteInfo<ViewBionicTextPageArgs> {
   ViewBionicTextPage({
     _i4.Key? key,
-    required String textToProcess,
-    required String title,
+    required dynamic Function(String) textToProcessFunc,
+    required _i5.TabClass tabClass,
     List<_i3.PageRouteInfo>? children,
   }) : super(
           ViewBionicTextPage.name,
           args: ViewBionicTextPageArgs(
             key: key,
-            textToProcess: textToProcess,
-            title: title,
+            textToProcessFunc: textToProcessFunc,
+            tabClass: tabClass,
           ),
           initialChildren: children,
         );
@@ -79,18 +67,32 @@ class ViewBionicTextPage extends _i3.PageRouteInfo<ViewBionicTextPageArgs> {
 class ViewBionicTextPageArgs {
   const ViewBionicTextPageArgs({
     this.key,
-    required this.textToProcess,
-    required this.title,
+    required this.textToProcessFunc,
+    required this.tabClass,
   });
 
   final _i4.Key? key;
 
-  final String textToProcess;
+  final dynamic Function(String) textToProcessFunc;
 
-  final String title;
+  final _i5.TabClass tabClass;
 
   @override
   String toString() {
-    return 'ViewBionicTextPageArgs{key: $key, textToProcess: $textToProcess, title: $title}';
+    return 'ViewBionicTextPageArgs{key: $key, textToProcessFunc: $textToProcessFunc, tabClass: $tabClass}';
   }
+}
+
+/// generated route for
+/// [_i2.MainPage]
+class MainPage extends _i3.PageRouteInfo<void> {
+  const MainPage({List<_i3.PageRouteInfo>? children})
+      : super(
+          MainPage.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MainPage';
+
+  static const _i3.PageInfo<void> page = _i3.PageInfo<void>(name);
 }
