@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import '../custom_widgets/tabbar_view_widget.dart';
-part 'tabbarview_states.g.dart';
+import 'model/tabclass.dart';
 
 final tabsStateProvider = StateNotifierProvider<TabsProvider, List<TabClass>>(
     (ref) => TabsProvider());
@@ -80,18 +80,4 @@ class TabsProvider extends StateNotifier<List<TabClass>> {
       TabClass(tabTitle: 'Tab 1', textToProcess: state[0].textToProcess),
     ];
   }
-}
-
-@collection
-class TabClass {
-  Id id;
-  final bool enableBtn;
-  String tabTitle;
-  String textToProcess;
-
-  TabClass(
-      {this.id = Isar.autoIncrement,
-      required this.tabTitle,
-      required this.textToProcess})
-      : enableBtn = textToProcess.isNotEmpty;
 }

@@ -5,6 +5,7 @@ import 'package:bionic_book_reader/route/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../main.dart';
+import '../data/model/tabclass.dart';
 import '../data/tabbarview_states.dart';
 
 class TabBarViewWidget extends ConsumerStatefulWidget {
@@ -68,7 +69,7 @@ class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
                             tabClass: widget.tabClass,
                             /*To update the text in the TabBarView when
                             * the text has been edit from ViewBionicTextPage*/
-                            textToProcessFunc: (value) =>
+                            textToProcessCallbackFunc: (value) =>
                                 textToProcessCtrl?.text = value,
                           ));
                         }
@@ -84,12 +85,11 @@ class TabBarViewWidgetState extends ConsumerState<TabBarViewWidget> {
           FloatingActionButtonLocation.miniCenterFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          List<TabClass> tabClassSchemaCount =
+          int tabClassSchemaCount =
               await LocalDatabaseService.getAllTabClassFromLocalDB();
 
           TabClass tabClass = TabClass(
-              tabTitle: 'Tab ${tabClassSchemaCount.length + 1}',
-              textToProcess: '');
+              tabTitle: 'Tab ${tabClassSchemaCount + 1}', textToProcess: '');
 
           LocalDatabaseService.addTabClassToLocalDB(tabClass);
         },
