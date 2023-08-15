@@ -1,6 +1,8 @@
+import 'package:bionic_book_reader/core/local_db_service.dart';
 import 'package:bionic_book_reader/pages/main_page/home_page/custom_widgets/tabbar_view_widget.dart';
 import 'package:bionic_book_reader/pages/main_page/home_page/data/dropdown_states.dart';
 import 'package:bionic_book_reader/pages/main_page/home_page/data/tabbarview_states.dart';
+import 'package:bloc/bloc.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,89 +12,106 @@ import '../../../custom_widgets/title_widget.dart';
 import '../../../utils/constants.dart';
 
 class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     HomePageDropDownItems dropdownState = ref.watch(dropdownStateProvider);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: DottedBorder(
-            color: Colors.black,
-            strokeWidth: 1,
-            dashPattern: const [5, 5],
-            child: Row(
-              children: [
-                const Flexible(
-                  child: Text(
-                    'Generate bionic text by:',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                Flexible(
-                  child: DropdownButtonFormField<HomePageDropDownItems>(
-                    padding: const EdgeInsets.all(4),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(8),
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(10),
+    return StreamBuilder<List<TabClass>>(
+      stream: LocalDatabaseService.getStreamOfTabClass(),
+      builder: (context, AsyncSnapshot<List<TabClass>> snapshot) {
+        List<TabClass> tabClassList = snapshot.data ?? [];
+
+        if (tabClassList.isEmpty) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DottedBorder(
+                color: Colors.black,
+                strokeWidth: 1,
+                dashPattern: const [5, 5],
+                child: Row(
+                  children: [
+                    const Flexible(
+                      child: Text(
+                        'Generate bionic text by:',
+                        style: TextStyle(fontSize: 20),
                       ),
                     ),
-                    isExpanded: true,
-                    value: dropdownState,
-                    items: dropDownItems
-                        .map((e) => DropdownMenuItem<HomePageDropDownItems>(
-                              value: e,
-                              child: Text(dropdownItemsMap[e]!),
-                            ))
-                        .toList(),
-                    onChanged: (val) {
-                      if (val != null) {
-                        ref.read(dropdownStateProvider.notifier).state = val;
-                      }
-                    },
-                  ),
+                    Flexible(
+                      child: DropdownButtonFormField<HomePageDropDownItems>(
+                        padding: const EdgeInsets.all(4),
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(8),
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.blue),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        isExpanded: true,
+                        value: dropdownState,
+                        items: dropDownItems
+                            .map((e) => DropdownMenuItem<HomePageDropDownItems>(
+                                  value: e,
+                                  child: Text(dropdownItemsMap[e]!),
+                                ))
+                            .toList(),
+                        onChanged: (val) {
+                          if (val != null) {
+                            ref.read(dropdownStateProvider.notifier).state =
+                                val;
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-        Visibility(
-          visible: ref.read(tabsStateProvider).length > 1,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: InkWell(
-                onTap: () {
-                  ref.read(tabsStateProvider.notifier).clearAllTabs();
-                },
-                child: Container(
-                  color: Colors.red.withOpacity(0.2),
-                  padding: const EdgeInsets.all(4),
-                  child: const Text(
-                    'Clear all tabs',
-                    style: TextStyle(color: Colors.red, fontSize: 18),
+            Visibility(
+              visible: tabClassList.length > 1,
+              // visible: ref.read(tabsStateProvider).length > 1,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: InkWell(
+                    onTap: () {
+                      LocalDatabaseService.clearDb();
+
+                      // ref.read(tabsStateProvider.notifier).clearAllTabs();
+                    },
+                    child: Container(
+                      color: Colors.red.withOpacity(0.2),
+                      padding: const EdgeInsets.all(4),
+                      child: const Text(
+                        'Clear all tabs',
+                        style: TextStyle(color: Colors.red, fontSize: 18),
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
-        tabWidget(ref),
-      ],
+            tabWidget(tabClassList),
+          ],
+        );
+      },
     );
   }
 
   //This holds the Tabs and the TabBarView widgets.
-  Expanded tabWidget(WidgetRef ref) {
-    List<TabClass> tabClassList = ref.watch(tabsStateProvider);
-    TabsProvider tabsProvider = ref.watch(tabsStateProvider.notifier);
+  Expanded tabWidget(List<TabClass> tabClassList) {
+    // List<TabClass> tabClassList = ref.watch(tabsStateProvider);
+    // TabsProvider tabsProvider = ref.watch(tabsStateProvider.notifier);
+    //
     return Expanded(
       child: DefaultTabController(
         length: tabClassList.length,
@@ -113,7 +132,7 @@ class HomePage extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              tabClass.tabsTitle,
+                              tabClass.tabTitle,
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w700),
                             ),
@@ -121,7 +140,9 @@ class HomePage extends ConsumerWidget {
                             index != 0
                                 ? InkWell(
                                     onTap: () {
-                                      tabsProvider.decrement(index);
+                                      // tabsProvider.decrement(index);
+                                      LocalDatabaseService.deleteTabClass(
+                                          tabClass.id);
                                     },
                                     child: const Icon(Icons.close,
                                         color: Colors.red),
@@ -140,13 +161,85 @@ class HomePage extends ConsumerWidget {
                 children: List.generate(
                   tabClassList.length,
                   (index) {
-                    return TabBarViewWidget(index: index);
+                    return TabBarViewWidget(tabClass: tabClassList[index]);
                   },
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+
+    return Expanded(
+      child: StreamBuilder<List<TabClass>>(
+        stream: LocalDatabaseService.getStreamOfTabClass(),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<TabClass>> snapshot) {
+          List<TabClass> snapshotData = snapshot.data ?? [];
+
+          if (snapshotData.isNotEmpty) {
+            return DefaultTabController(
+              length: snapshotData.length,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 60,
+                    child: AppBar(
+                      bottom: TabBar(
+                        isScrollable: true,
+                        tabs: List.generate(
+                          snapshotData.length,
+                          (index) {
+                            TabClass tabClass = snapshotData[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    tabClass.tabTitle,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  index != 0
+                                      ? InkWell(
+                                          onTap: () {
+                                            // tabsProvider.decrement(index);
+                                            LocalDatabaseService.deleteTabClass(
+                                                tabClass.id);
+                                          },
+                                          child: const Icon(Icons.close,
+                                              color: Colors.red),
+                                        )
+                                      : const SizedBox.shrink(),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: List.generate(
+                        snapshotData.length,
+                        (index) {
+                          return TabBarViewWidget(
+                              tabClass: snapshotData[index]);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }
