@@ -9,7 +9,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i3;
-import 'package:bionic_book_reader/pages/main_page/home_page/data/tabbarview_states.dart'
+import 'package:bionic_book_reader/pages/main_page/home_page/data/model/tabclass.dart'
     as _i5;
 import 'package:bionic_book_reader/pages/main_page/main_page.dart' as _i2;
 import 'package:bionic_book_reader/pages/view_bionic_text_page.dart' as _i1;
@@ -26,7 +26,7 @@ abstract class $AppRouter extends _i3.RootStackRouter {
         routeData: routeData,
         child: _i1.ViewBionicTextPage(
           key: args.key,
-          textToProcessFunc: args.textToProcessFunc,
+          textToProcessCallbackFunc: args.textToProcessCallbackFunc,
           tabClass: args.tabClass,
         ),
       );
@@ -45,14 +45,14 @@ abstract class $AppRouter extends _i3.RootStackRouter {
 class ViewBionicTextPage extends _i3.PageRouteInfo<ViewBionicTextPageArgs> {
   ViewBionicTextPage({
     _i4.Key? key,
-    required dynamic Function(String) textToProcessFunc,
+    required dynamic Function(String) textToProcessCallbackFunc,
     required _i5.TabClass tabClass,
     List<_i3.PageRouteInfo>? children,
   }) : super(
           ViewBionicTextPage.name,
           args: ViewBionicTextPageArgs(
             key: key,
-            textToProcessFunc: textToProcessFunc,
+            textToProcessCallbackFunc: textToProcessCallbackFunc,
             tabClass: tabClass,
           ),
           initialChildren: children,
@@ -67,19 +67,19 @@ class ViewBionicTextPage extends _i3.PageRouteInfo<ViewBionicTextPageArgs> {
 class ViewBionicTextPageArgs {
   const ViewBionicTextPageArgs({
     this.key,
-    required this.textToProcessFunc,
+    required this.textToProcessCallbackFunc,
     required this.tabClass,
   });
 
   final _i4.Key? key;
 
-  final dynamic Function(String) textToProcessFunc;
+  final dynamic Function(String) textToProcessCallbackFunc;
 
   final _i5.TabClass tabClass;
 
   @override
   String toString() {
-    return 'ViewBionicTextPageArgs{key: $key, textToProcessFunc: $textToProcessFunc, tabClass: $tabClass}';
+    return 'ViewBionicTextPageArgs{key: $key, textToProcessCallbackFunc: $textToProcessCallbackFunc, tabClass: $tabClass}';
   }
 }
 

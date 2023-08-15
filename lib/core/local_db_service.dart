@@ -1,6 +1,8 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../pages/main_page/home_page/data/model/tabbarposition.dart';
+import '../pages/main_page/home_page/data/model/tabclass.dart';
 import '../pages/main_page/home_page/data/tabbarview_states.dart';
 
 class LocalDatabaseService {
@@ -10,7 +12,7 @@ class LocalDatabaseService {
     if (Isar.instanceNames.isEmpty) {
       final dir = await getApplicationDocumentsDirectory();
       isar = await Isar.open(
-        [TabClassSchema],
+        [TabClassSchema, TabBarPositionSchema],
         directory: dir.path,
       );
 
@@ -28,10 +30,11 @@ class LocalDatabaseService {
     });
   }
 
-  static Future<List<TabClass>> getAllTabClassFromLocalDB() async {
+  static Future<int> getAllTabClassFromLocalDB() async {
+    await Future.delayed(const Duration(milliseconds: 500));
     await LocalDatabaseService.initializeLocalDB();
 
-    return await isar.tabClass.where().findAll(); // get all
+    return await isar.tabClass.where().count(); // get all
   }
 
   static Stream<List<TabClass>> getStreamOfTabClass() async* {
@@ -59,6 +62,18 @@ class LocalDatabaseService {
     });
   }
 
+  static Future<int> getCurrentTabBarPosition() async {
+    return await isar.tabBarPositions.get(1).then((value) {
+      return value?.position ?? 0;
+    });
+  }
+
+  static Future saveCurrentTabBarPosition(int index) async {
+    isar.writeTxn(() async {
+      await isar.tabBarPositions.put(TabBarPosition(position: index));
+    });
+  }
+
   static Future deleteTabClass(int id) async {
     isar.writeTxn(() async {
       return await isar.tabClass.delete(id);
@@ -68,6 +83,7 @@ class LocalDatabaseService {
   static Future clearDb() async {
     await isar.writeTxn(() async {
       await isar.tabClass.clear();
+      await isar.tabBarPositions.clear();
     });
 
     /*We did this delay here so that tabs can be fully cleared out

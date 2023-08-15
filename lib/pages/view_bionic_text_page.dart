@@ -4,15 +4,18 @@ import 'package:bionic_book_reader/custom_widgets/bionic_text_widget.dart';
 import 'package:bionic_book_reader/custom_widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
+import 'main_page/home_page/data/model/tabclass.dart';
 import 'main_page/home_page/data/tabbarview_states.dart';
 
 @RoutePage()
 class ViewBionicTextPage extends StatefulWidget {
   final TabClass tabClass;
-  final Function(String text) textToProcessFunc;
+  final Function(String text) textToProcessCallbackFunc;
 
   const ViewBionicTextPage(
-      {Key? key, required this.textToProcessFunc, required this.tabClass})
+      {Key? key,
+      required this.textToProcessCallbackFunc,
+      required this.tabClass})
       : super(key: key);
 
   @override
@@ -75,19 +78,7 @@ class _ViewBionicTextPageState extends State<ViewBionicTextPage> {
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      if (widget.tabClass.textToProcess !=
-                          textToProcessCtrl.text) {
-                        await LocalDatabaseService.updateTabClass(
-                            widget.tabClass.id,
-                            textToProcess: textToProcessCtrl.text);
-
-                        setState(() => isEditing = false);
-                        widget.textToProcessFunc(textToProcessCtrl.text);
-                      }
-                    }
-                  },
+                  onPressed: () => saveEditing(),
                   child: const Text('Save Editing'),
                 )
               ] else ...[
@@ -120,5 +111,20 @@ class _ViewBionicTextPageState extends State<ViewBionicTextPage> {
         ),
       ),
     );
+  }
+
+  Future saveEditing() async {
+    if (formKey.currentState!.validate()) {
+      if (widget.tabClass.tabTitle != titleCtrl.text) {
+        await LocalDatabaseService.updateTabClass(widget.tabClass.id,
+            tabTitle: titleCtrl.text);
+      }
+      if (widget.tabClass.textToProcess != textToProcessCtrl.text) {
+        await LocalDatabaseService.updateTabClass(widget.tabClass.id,
+            textToProcess: textToProcessCtrl.text);
+      }
+      setState(() => isEditing = false);
+      widget.textToProcessCallbackFunc(textToProcessCtrl.text);
+    }
   }
 }

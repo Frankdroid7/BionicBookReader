@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tabbarview_states.dart';
+part of 'tabclass.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
